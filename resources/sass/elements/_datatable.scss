@@ -1,0 +1,41 @@
+.paginate_button {
+    cursor: pointer;
+    // font-size: $default-font-size;
+    padding: 3px 1rem;
+
+}
+
+.disabled {
+    cursor: text;
+}
+ 
+.current {
+    background-color: $hot-stone;
+    color: $clouds !important;
+}
+
+tbody{
+    background-color: $lynxwhite;
+}
+
+tbody:hover{
+    cursor: pointer;
+}
+
+// tbody>tr:hover{
+//     background-color: $clouds;
+// }
+thead>tr{
+    // background-color: $midnight-blue;
+    color: $lynxwhite;
+}
+
+label>input[type="search"]{
+    height: 25px !important;
+    border: 1px solid $blue-night !important;
+}
+
+.paginate_button:hover{
+    background-color: $hot-stone;
+    color: $clouds !important;
+}

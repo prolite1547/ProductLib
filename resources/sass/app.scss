@@ -1,0 +1,16 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Barlow|Montserrat&display=swap');
+
+// Variables
+@import 'variables';
+
+// Font Awesome 
+@import "node_modules/font-awesome/scss/font-awesome";
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+@import '~select2/src/scss/core';
+@import 'sweetalert2/src/sweetalert2.scss';
+// main
+@import 'main';

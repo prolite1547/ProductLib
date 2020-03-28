@@ -1,0 +1,28 @@
+.nav-link{
+    color: $hot-stone;
+    &__sublink{
+        color: $asbestos !important;
+        &--active{
+            color: $clouds !important;
+            background-color: $asbestos;
+        }
+        &--active:hover{
+            color: $clouds !important;
+        }
+    }
+
+    // &__sublink:hover{
+    //     color: $midnight-blue !important;
+    // }
+  
+    &__active{
+        color: $clouds !important;
+        transform: scale(1.1);
+    }
+    &__main:hover{
+        color: $clouds !important;
+    }
+}
+
+ 
+

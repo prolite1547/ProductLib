@@ -1,0 +1,115 @@
+@import 'components/mixins';
+
+@import 'elements/input';
+@import 'elements/form';
+@import 'elements/img';
+@import 'elements/alinks';
+@import 'elements/datatable';
+
+@import 'components/loader';
+@import 'components/modal';
+@import 'components/sidebar';
+@import 'components/card';
+ 
+*{
+  font-family: 'Montserrat', sans-serif;
+}
+
+input, textarea{
+  font-family: 'Barlow', sans-serif !important;
+  font-size: 18px;
+}
+
+ 
+
+body {
+  padding-bottom: 30px;
+}
+label{
+    font-weight: semi-bold;
+}
+
+.hover-label{
+   font-weight: bold !important;
+   font-size: small;
+   
+}
+
+ul{
+  margin: 0px;
+  padding-top: 0px !important;
+}
+
+@media print{
+  body {
+    margin: 0px;
+    color: #000;
+    background-color: #fff;
+  } 
+  
+  .report_params{
+    display: none;
+  }
+  .report_items{
+     width: 14rem !important;
+  }
+  // .reportResult{
+  //   display: table;
+  // }
+  // table, img, svg {
+  //   break-inside: avoid;
+  // }
+
+
+}
+ 
+#preview{
+  // position: fixed;
+  // position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border:1px solid #ddd;
+  background-color:$mblue ;
+  display:none;
+  color: black;
+  box-shadow: 2px 5px #888888;
+
+  // margin-left: auto;
+  // margin-right: auto;
+  margin-top: 50px;
+  // margin-left: -(70)px;
+  width: 75vw;
+  min-height: 128px;
+  max-height: 425px;
+  padding: 1px;
+}
+
+
+.float{
+  visibility: hidden;
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	// background-color: $blue-night;
+  color: $asbestos;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+}
+
+.float:hover{
+  color: $clouds;
+  border: $clouds 2px solid;
+}
+
+.my-float{
+  margin-top:12px;
+  font-size: 32px;
+}
+
+ 
