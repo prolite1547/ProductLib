@@ -31,9 +31,11 @@ class CreateProductsTable extends Migration
             $table->string('finish_color')->nullable();
             $table->text('feature')->nullable();
             $table->text('benefits')->nullable();
-            $table->string('ebs_msi_updated_by');
-            $table->string('ebs_msi_updated_at');
-            $table->string('ebs_ic_updated_at');
+            $table->string('last_update_date');
+            $table->string('last_update_by');
+            // $table->string('ebs_msi_updated_by');
+            // $table->string('ebs_msi_updated_at');
+            // $table->string('ebs_ic_updated_at');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
             $table->unsignedBigInteger('updated_by');

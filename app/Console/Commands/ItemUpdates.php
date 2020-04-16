@@ -78,20 +78,19 @@ class ItemUpdates extends Command
         MSI.DIMENSIONNAME as dimension,
         MSI.FINISHCOLORNAME as finish_color,
         MSI.MODELFRMSUPPLIERNAME as code,
-        TO_CHAR(MSIB_LAST_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as ebs_msi_updated_at,
-        TO_CHAR(MSI.CAT_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as ebs_ic_updated_at,
-        MSIB_LAST_UPDATE_BY as ebs_msi_updated_by
+        TO_CHAR(MSI.LASTUPDATEDATE, 'dd-MON-YY hh24:mi:ss') as last_update_date,
+        MSI.LASTUPDATEBY as last_update_by
         FROM 
         -- XXCH_PRODUCT_LISTING_V MSI,
         XXCH_PRODUCT_LISTING_DEV_V MSI,
         DWT_DIM_EX_SUPPLIER  AP 
         WHERE 
-        AP.SEGMENT1 = MSI.VENDORCODE AND 
+        AP.VENDORID = MSI.SUPPLIERID AND 
         MSI.BARCODE = '$p->barcode'";
         $stmt = $this->conn->prepare($query);
         if($stmt->execute()){
           $result = $stmt->fetch(PDO::FETCH_ASSOC);
-           if($result["ebs_msi_updated_at"] != $p->ebs_msi_updated_at || $result["ebs_ic_updated_at"] != $p->ebs_ic_updated_at){
+           if($result["last_update_date"] != $p->last_update_date){
               // return response()->json($result);
               $currProduct = Product::find($p->id);
               foreach($result as $r => $value){
@@ -101,8 +100,6 @@ class ItemUpdates extends Command
               $currProduct->save();
               // $currProduct->barcode = $result["barcode"];
              return $currProduct;
-
-
            }
         }
         sleep(3);

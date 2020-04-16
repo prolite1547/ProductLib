@@ -115,10 +115,12 @@
                         <div class="form-group row">
                                 <label for="benefits">Benefits</label>
                                 <textarea name="benefits" class="form-control input__text-area" id="benefits" cols="10" rows="5"></textarea>
-         
+{{--          
                                 {!! Form::hidden('ebs_msi_updated_at', null, ['id'=>'msib_update_date']) !!}
                                 {!! Form::hidden('ebs_ic_updated_at', null, ['id'=>'cat_update_date']) !!}
-                                {!! Form::hidden('ebs_msi_updated_by', null, ['id'=>'ebs_msi_updated_by']) !!}
+                                {!! Form::hidden('ebs_msi_updated_by', null, ['id'=>'ebs_msi_updated_by']) !!} --}}
+                                {!! Form::hidden('last_update_date', null, ['id'=>'last_update_date']) !!} 
+                                {!! Form::hidden('last_update_by', null, ['id'=>'last_update_by']) !!} 
                                 {!! Form::hidden('user_id', Auth::user()->id , []) !!}
                                 {!! Form::hidden('updated_by', Auth::user()->id, []) !!}
                         </div>

@@ -27,11 +27,13 @@ class Product extends Model
         'finish_color',
         'feature',
         'benefits',
-        'ebs_msi_updated_at',
-        'ebs_msi_updated_by',
+        'last_update_date',
+        'last_update_by',
+      //   'ebs_msi_updated_at',
+      //   'ebs_msi_updated_by',
         'user_id',
         'updated_by',
-        'ebs_ic_updated_at',
+      //   'ebs_ic_updated_at',
         'updated_at',
         'created_at'
      ];

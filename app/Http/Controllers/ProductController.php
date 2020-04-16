@@ -52,15 +52,17 @@ class ProductController extends Controller
                 MSI.DIMENSIONNAME as dimension,
                 MSI.FINISHCOLORNAME as finish_color,
                 MSI.MODELFRMSUPPLIERNAME as code,
-                TO_CHAR(MSIB_LAST_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as msib_update_date,
-                TO_CHAR(MSI.CAT_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as cat_update_date,
-                MSIB_LAST_UPDATE_BY as ebs_msi_updated_by
+                TO_CHAR(LASTUPDATEDATE, 'dd-MON-YY hh24:mi:ss') as last_update_date,
+                LASTUPDATEBY as last_update_by
+              --  TO_CHAR(MSIB_LAST_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as msib_update_date,
+              --  TO_CHAR(MSI.CAT_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as cat_update_date,
+              --  MSIB_LAST_UPDATE_BY as ebs_msi_updated_by
                 FROM 
                 -- XXCH_PRODUCT_LISTING_V MSI,
                 XXCH_PRODUCT_LISTING_DEV_V  MSI,
                 DWT_DIM_EX_SUPPLIER  AP 
                 WHERE 
-                AP.SEGMENT1 = MSI.VENDORCODE AND 
+                AP.VENDORID = MSI.SUPPLIERID AND 
                 MSI.BARCODE = '$barcode' AND ROWNUM = 1";
       $stmt = $this->conn->prepare($query);
       if($stmt->execute()){
