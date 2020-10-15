@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Department;
+use App\Role;
 use Illuminate\Support\ServiceProvider;
 
 class ProdViewServiceProvider extends ServiceProvider
@@ -29,6 +30,7 @@ class ProdViewServiceProvider extends ServiceProvider
             $manageProdRoute = ['addproduct.view'];
             $addProdRoute = ['addproduct.view'];
             $reportsRoute = ['report.view'];
+            $registerRoute = ['register'];
 
             $productRoute = [
                 'products.view',
@@ -41,13 +43,15 @@ class ProdViewServiceProvider extends ServiceProvider
                 'manageProdRoute',
                 'addProdRoute',
                 'prodListRoute',
-                'reportsRoute'
+                'reportsRoute',
+                'registerRoute'
             ));
          });
 
          view()->composer(['auth.register'], function($view){
             $departments = Department::pluck('name', 'id')->toArray();
-            $view->with(compact('departments'));
+            $roles = Role::pluck('description', 'id')->toArray();
+            $view->with(compact('departments','roles'));
          });
          
     }

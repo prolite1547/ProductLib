@@ -48,11 +48,10 @@ class ItemUpdates extends Command
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_NUM,
         ];
         /*Oracle*/
-        $myServer = '192.168.3.115';
-        $myDB = 'DW';
-        $oci_uname = 'dw';
-        $oci_pass = 'dw';
-        
+        $myServer = '192.168.3.101';
+        $myDB = 'DEV';
+        $oci_uname = 'appsro';
+        $oci_pass = 'appsro';
         $tns = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = ".$myServer.")(PORT = 1521)))(CONNECT_DATA=(SID=".$myDB.")))";
         try {
             $this->conn = new PDO("oci:dbname=".$tns. ';charset=UTF8', $oci_uname, $oci_pass,$options);
@@ -65,7 +64,8 @@ class ItemUpdates extends Command
       foreach($product as $p){
         $query = "SELECT
         MSI.BARCODE as barcode,
-        MSI.LEGACY_BARCODE as legacy_barcode,
+        MSI.LEGACYBARCODE as legacy_barcode,
+        -- MSI.LEGACY_BARCODE as legacy_barcode,
         MSI.DESCRIPTION as description,
         MSI.BRANDNAME as brand,
         AP.VENDOR_NAME as supplier,
@@ -73,19 +73,26 @@ class ItemUpdates extends Command
         MSI.DEPARTMENTNAME as department,
         MSI.CATEGORYNAME as category,
         MSI.SUBCATEGORYNAME as sub_category,
+        -- MSI.STATUS as status,
         MSI.INVENTORY_ITEM_STATUS_CODE as status,
         MSI.MATERIALNAME as material,
         MSI.DIMENSIONNAME as dimension,
         MSI.FINISHCOLORNAME as finish_color,
         MSI.MODELFRMSUPPLIERNAME as code,
-        TO_CHAR(MSI.LASTUPDATEDATE, 'dd-MON-YY hh24:mi:ss') as last_update_date,
-        MSI.LASTUPDATEBY as last_update_by
+        TO_CHAR(MSI.LAST_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as last_update_date,
+       -- TO_CHAR(MSI.LASTUPDATEDATE, 'dd-MON-YY hh24:mi:ss') as last_update_date,
+        MSI.LAST_UPDATED_BY as last_update_by
+       -- MSI.LASTUPDATEBY as last_update_by
         FROM 
-        -- XXCH_PRODUCT_LISTING_V MSI,
-        XXCH_PRODUCT_LISTING_DEV_V MSI,
-        DWT_DIM_EX_SUPPLIER  AP 
+        XXCH_MTLCAT_PRODUCT_V MSI,
+        APPS.AP_SUPPLIERS AP
+       -- DWT_DIM_PRODUCT MSI,
+       -- XXCH_PRODUCT_LISTING_V MSI,
+       -- XXCH_PRODUCT_LISTING_DEV_V MSI,
+       -- DWT_DIM_EX_SUPPLIER  AP 
         WHERE 
-        AP.VENDORID = MSI.SUPPLIERID AND 
+        AP.SEGMENT1 = MSI.VENDORCODE AND 
+      -- AP.VENDORID = MSI.SUPPLIERID AND 
         MSI.BARCODE = '$p->barcode'";
         $stmt = $this->conn->prepare($query);
         if($stmt->execute()){

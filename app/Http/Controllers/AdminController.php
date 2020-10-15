@@ -26,5 +26,6 @@ class AdminController extends Controller
 
    public function reportView(){
        return view('pages.reports');
-   }
+  }   
+  
 }

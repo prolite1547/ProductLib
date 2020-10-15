@@ -5,9 +5,16 @@
     <div class="row justify-content-center mt-5">
         <div class="col-md-6">
             <div class="card" >
-                <div class="card-header  bg-dark text-light">User Authentication</div>
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                <div class="card-header  bg-light text-dark">Note : </div>
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger" role="alert">
+                                Login form is not available. <br> You may login via CitiHardware EBS Dashboard
+                            </div>
+                        </div>
+                    </div>
+                    {{--  <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="form-group row">
                             <label for="uname" class="col-md-4 col-form-label text-md-right">Username</label>
@@ -38,7 +45,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form>  --}}
                 </div>
             </div>
         </div>

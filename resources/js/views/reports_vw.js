@@ -17,7 +17,7 @@ export const ReportViewController = () => {
     })
 
 
-    $.ajax('/api-brands', {
+    $.ajax('/ProdLib/public/api-brands', {
         type: "GET",  
     }).done(data =>{
         elements.brandSelect2.select2({
@@ -29,7 +29,7 @@ export const ReportViewController = () => {
     });
 
 
-    $.ajax('/api-dimension', {
+    $.ajax('/ProdLib/public/api-dimension', {
         type: "GET",  
     }).done(data =>{
         elements.dimensionSelect2.select2({

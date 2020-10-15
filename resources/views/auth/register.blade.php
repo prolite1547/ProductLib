@@ -10,7 +10,20 @@
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
+
                         <div class="form-group row">
+                            <label for="uname" class="col-md-4 col-form-label text-md-right">{{ __('User Name') }}</label>
+                            <div class="col-md-6">
+                                <input id="uname" type="text" class="form-control @error('uname') is-invalid @enderror" name="uname" value="{{ old('uname') }}" required autocomplete="uname" autofocus>
+                                @error('uname')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{--  <div class="form-group row">
                             <label for="fname" class="col-md-4 col-form-label text-md-right">{{ __('First Name') }}</label>
                             <div class="col-md-6">
                                 <input id="fname" type="text" class="form-control @error('fname') is-invalid @enderror" name="fname" value="{{ old('fname') }}" required autocomplete="fname" autofocus>
@@ -32,7 +45,7 @@
                                     </span>
                                 @enderror
                             </div>
-                        </div>
+                        </div>  --}}
 
                         {{-- <div class="form-group row">
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
@@ -63,8 +76,23 @@
                             </div>
                         </div>
 
-
                         <div class="form-group row">
+                            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">User Role</label>
+
+                            <div class="col-md-6">
+                                
+                                {!! Form::select('role_id', $roles, null, ['class'=>'departmentSelect2 form-control']) !!}
+                                
+                                @error('role_id')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+
+                        {{--  <div class="form-group row">
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
@@ -85,7 +113,7 @@
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                             </div>
-                        </div>
+                        </div>  --}}
 
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">

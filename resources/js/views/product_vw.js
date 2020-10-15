@@ -1,9 +1,18 @@
 
-import {elements} from "./base";
+import {elements,showLoader, hideLoader} from "./base";
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 export const ProductViewController = () => {
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+
    let table = elements.productsTable.DataTable({
-        ajax: '/api-products',
+        ajax: '/ProdLib/public/api-products',
         order: [[0, 'desc']],
         columns: [
             {"className": 'details-control',data: null},
@@ -26,9 +35,9 @@ export const ProductViewController = () => {
                 targets: 0,  
                 orderable: false,
                 render: (data, type, row) => {
-                    let path = "../../images/no-image.png";
+                    let path = "../../public/images/no-image.png";
                     if(row.path != null){
-                        path = "../storage/product_images/"+row.path;
+                        path = "../public/storage/product_images/"+row.path;
                     }
                     return `<a href="${path}" target="_about" data-barcode="${data.barcode}" data-department="${data.department}" data-category="${data.category}" class="preview" data-title="${row.description}" data-sub_categ="${data.sub_category}" data-dimension="${data.dimension}" data-finish_color="${data.finish_color}" data-material="${data.material}" data-code="${data.code}" data-feature="${data.feature}" data-ebs_date="${data.last_update_date}" data-ebs_by="${data.last_update_by}" data-benefits="${data.benefits}" data-date_created="${data.created_at}" data-created_by="${data.created_by}" data-updated_by="${data.updated_by}" data-updated_date="${data.updated_at}"><img src="${path}" width="64px" height="64px" alt="No image preview"></a>`;
                 }
@@ -38,11 +47,11 @@ export const ProductViewController = () => {
                 targets: 8,  
                 orderable: false,
                 render: (data, type, row) => {
-                    let path = "../../images/no-image.png";
+                    let path = "../../public/images/no-image.png";
                     if(row.path != null){
-                        path = "../storage/product_images/"+row.path;
+                        path = "../public/storage/product_images/"+row.path;
                     }
-                    return `<button class="btn btn-sm btn-danger" data-action="edit-product" data-toggle="modal" data-href="${path}" data-features="${row.feature}" data-id="${row.id}" data-benefits="${row.benefits}"  data-target="#modalEdit" >EDIT</button>`
+                    return `<button class="btn btn-sm btn-dark  form-control" data-action="edit-product" data-toggle="modal" data-href="${path}" data-features="${row.feature}" data-id="${row.id}" data-benefits="${row.benefits}"  data-target="#modalEdit" >EDIT</button><button class="btn btn-sm btn-danger mt-1 form-control" data-action="delete-product" data-href="${path}" data-id="${row.id}" >DELETE</button>`
                 }
 
              }  
@@ -197,6 +206,48 @@ export const ProductViewController = () => {
             elements.benefits_modal.val(benefits);
             elements.features_modal.val(features);
             elements.product_id.val($(e.currentTarget).data('id'));
+        });
+
+
+        $('#table_products tbody').on('click','button[data-action="delete-product"]', (e)=>{
+            var prodId = $(e.currentTarget).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+              }).then((result) => {
+                     if(result.value){
+                        $.ajax({
+                            url : `/ProdLib/public/delete-product`,
+                            type: 'POST',
+                            data : {
+                                prodId : prodId
+                            },
+                            beforeSend:function(){
+                                showLoader();
+                            },
+                            success:function(response) {
+                                 hideLoader();
+                                 console.log(response.success);
+                                 if(response.success){
+                                    Swal.fire('Done','Product Successfully Deleted', 'success').then(()=>{
+                                        location.reload();
+                                   });
+                                 }else{
+                                     Swal.fire('Error!', 'An error occurred during deletion of the product ', 'error');
+                                 }
+                            },
+                            error: function(){
+                                Swal.fire('Error!', 'An error occurred during deletion of the product', 'error');
+                                hideLoader();
+                            }
+                        });
+                     }
+              })
         });
         
 

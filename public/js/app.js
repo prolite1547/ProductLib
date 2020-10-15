@@ -61615,7 +61615,7 @@ var ProductController = function ProductController() {
   _views_base__WEBPACK_IMPORTED_MODULE_0__["elements"].btnGetDetails.on('click', function () {
     var barcode = _views_base__WEBPACK_IMPORTED_MODULE_0__["elements"].ebs_input.val();
     Object(_views_base__WEBPACK_IMPORTED_MODULE_0__["showLoader"])();
-    $.ajax("/get/product-details/".concat(barcode), {
+    $.ajax("/ProdLib/public/get/product-details/".concat(barcode), {
       type: 'GET'
     }).done(function (data) {
       if (data.length > 0) {
@@ -61664,7 +61664,7 @@ var ProductController = function ProductController() {
 
     var formData = new FormData(e.target);
     Object(_views_base__WEBPACK_IMPORTED_MODULE_0__["showLoader"])();
-    $.ajax('/add-product', {
+    $.ajax('/ProdLib/public/add-product', {
       type: "POST",
       data: formData,
       contentType: false,
@@ -61692,7 +61692,7 @@ var ProductController = function ProductController() {
     e.preventDefault();
     var formData = new FormData(e.target);
     Object(_views_base__WEBPACK_IMPORTED_MODULE_0__["showLoader"])();
-    $.ajax('/update-product', {
+    $.ajax('/ProdLib/public/update-product', {
       type: "POST",
       data: formData,
       contentType: false,
@@ -61734,7 +61734,7 @@ var GenerateReportController = function GenerateReportController() {
     e.preventDefault();
     Object(_views_base__WEBPACK_IMPORTED_MODULE_0__["showLoader"])();
     var form = new FormData(e.target);
-    $.ajax('/generate-report', {
+    $.ajax('/ProdLib/public/generate-report', {
       type: "POST",
       data: form,
       contentType: false,
@@ -61918,10 +61918,18 @@ var checkImage = function checkImage(imageElement, inputElement) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ProductViewController", function() { return ProductViewController; });
 /* harmony import */ var _base__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base */ "./resources/js/views/base.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! sweetalert2/dist/sweetalert2.js */ "./node_modules/sweetalert2/dist/sweetalert2.js");
+/* harmony import */ var sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_1__);
+
 
 var ProductViewController = function ProductViewController() {
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
   var table = _base__WEBPACK_IMPORTED_MODULE_0__["elements"].productsTable.DataTable({
-    ajax: '/api-products',
+    ajax: '/ProdLib/public/api-products',
     order: [[0, 'desc']],
     columns: [{
       "className": 'details-control',
@@ -61962,10 +61970,10 @@ var ProductViewController = function ProductViewController() {
       targets: 0,
       orderable: false,
       render: function render(data, type, row) {
-        var path = "../../images/no-image.png";
+        var path = "../../public/images/no-image.png";
 
         if (row.path != null) {
-          path = "../storage/product_images/" + row.path;
+          path = "../public/storage/product_images/" + row.path;
         }
 
         return "<a href=\"".concat(path, "\" target=\"_about\" data-barcode=\"").concat(data.barcode, "\" data-department=\"").concat(data.department, "\" data-category=\"").concat(data.category, "\" class=\"preview\" data-title=\"").concat(row.description, "\" data-sub_categ=\"").concat(data.sub_category, "\" data-dimension=\"").concat(data.dimension, "\" data-finish_color=\"").concat(data.finish_color, "\" data-material=\"").concat(data.material, "\" data-code=\"").concat(data.code, "\" data-feature=\"").concat(data.feature, "\" data-ebs_date=\"").concat(data.last_update_date, "\" data-ebs_by=\"").concat(data.last_update_by, "\" data-benefits=\"").concat(data.benefits, "\" data-date_created=\"").concat(data.created_at, "\" data-created_by=\"").concat(data.created_by, "\" data-updated_by=\"").concat(data.updated_by, "\" data-updated_date=\"").concat(data.updated_at, "\"><img src=\"").concat(path, "\" width=\"64px\" height=\"64px\" alt=\"No image preview\"></a>");
@@ -61974,13 +61982,13 @@ var ProductViewController = function ProductViewController() {
       targets: 8,
       orderable: false,
       render: function render(data, type, row) {
-        var path = "../../images/no-image.png";
+        var path = "../../public/images/no-image.png";
 
         if (row.path != null) {
-          path = "../storage/product_images/" + row.path;
+          path = "../public/storage/product_images/" + row.path;
         }
 
-        return "<button class=\"btn btn-sm btn-danger\" data-action=\"edit-product\" data-toggle=\"modal\" data-href=\"".concat(path, "\" data-features=\"").concat(row.feature, "\" data-id=\"").concat(row.id, "\" data-benefits=\"").concat(row.benefits, "\"  data-target=\"#modalEdit\" >EDIT</button>");
+        return "<button class=\"btn btn-sm btn-dark  form-control\" data-action=\"edit-product\" data-toggle=\"modal\" data-href=\"".concat(path, "\" data-features=\"").concat(row.feature, "\" data-id=\"").concat(row.id, "\" data-benefits=\"").concat(row.benefits, "\"  data-target=\"#modalEdit\" >EDIT</button><button class=\"btn btn-sm btn-danger mt-1 form-control\" data-action=\"delete-product\" data-href=\"").concat(path, "\" data-id=\"").concat(row.id, "\" >DELETE</button>");
       }
     }]
   });
@@ -62072,6 +62080,47 @@ var ProductViewController = function ProductViewController() {
       _base__WEBPACK_IMPORTED_MODULE_0__["elements"].benefits_modal.val(benefits);
       _base__WEBPACK_IMPORTED_MODULE_0__["elements"].features_modal.val(features);
       _base__WEBPACK_IMPORTED_MODULE_0__["elements"].product_id.val($(e.currentTarget).data('id'));
+    });
+    $('#table_products tbody').on('click', 'button[data-action="delete-product"]', function (e) {
+      var prodId = $(e.currentTarget).data('id');
+      sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          $.ajax({
+            url: "/ProdLib/public/delete-product",
+            type: 'POST',
+            data: {
+              prodId: prodId
+            },
+            beforeSend: function beforeSend() {
+              Object(_base__WEBPACK_IMPORTED_MODULE_0__["showLoader"])();
+            },
+            success: function success(response) {
+              Object(_base__WEBPACK_IMPORTED_MODULE_0__["hideLoader"])();
+              console.log(response.success);
+
+              if (response.success) {
+                sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_1___default.a.fire('Done', 'Product Successfully Deleted', 'success').then(function () {
+                  location.reload();
+                });
+              } else {
+                sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_1___default.a.fire('Error!', 'An error occurred during deletion of the product ', 'error');
+              }
+            },
+            error: function error() {
+              sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_1___default.a.fire('Error!', 'An error occurred during deletion of the product', 'error');
+              Object(_base__WEBPACK_IMPORTED_MODULE_0__["hideLoader"])();
+            }
+          });
+        }
+      });
     }); // $("#table_products tbody").find('td.details-control>a.preview').hover("",function(e){
     // this.t = this.title;
     // this.title = "";
@@ -62160,7 +62209,7 @@ var ReportViewController = function ReportViewController() {
   _base__WEBPACK_IMPORTED_MODULE_0__["elements"].printDetailsSelect2.select2({
     multiple: true
   });
-  $.ajax('/api-brands', {
+  $.ajax('/ProdLib/public/api-brands', {
     type: "GET"
   }).done(function (data) {
     _base__WEBPACK_IMPORTED_MODULE_0__["elements"].brandSelect2.select2({
@@ -62190,7 +62239,7 @@ var ReportViewController = function ReportViewController() {
       }
     }
   });
-  $.ajax('/api-dimension', {
+  $.ajax('/ProdLib/public/api-dimension', {
     type: "GET"
   }).done(function (data) {
     _base__WEBPACK_IMPORTED_MODULE_0__["elements"].dimensionSelect2.select2({

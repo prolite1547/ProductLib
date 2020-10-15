@@ -38,7 +38,7 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware(['auth', 'authrole']);
     }
 
     /**
@@ -50,14 +50,14 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {   
         $alias = array(
-            'fname' => 'First Name',
-            'lname' => 'Last Name',
-            'password' => 'Password'
+            'uname' => 'User Name',
+            // 'lname' => 'Last Name',
+            // 'password' => 'Password'
         );
         $validator = Validator::make($data, [
-            'fname' => ['required', 'string', 'max:255'],
-            'lname' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'uname' => ['required', 'string', 'max:255'],
+            // 'lname' => ['required', 'string', 'max:255'],
+            // 'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
         $validator->setAttributeNames($alias);
 
@@ -74,15 +74,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {   
-        $first_name = substr($data['fname'], 0, 1);
-        $uname = strtolower($first_name. "." . $data["lname"]);
+        // $first_name = substr($data['fname'], 0, 1);
+        // $uname = strtolower($first_name. "." . $data["lname"]);
         return User::create([
-            'fname' => $data['fname'],
-            'lname' => $data['lname'],
-            'uname' => $uname,
-            'role_id' => '1',
+            'fname' => $data['uname'],
+            'lname' => $data['uname'],
+            'uname' => strtoupper($data['uname']),
+            'role_id' => $data['role_id'],
             'department_id' => $data['department_id'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make('welcome'),
         ]);
     }
 

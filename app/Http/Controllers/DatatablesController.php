@@ -32,6 +32,8 @@ class DatatablesController extends Controller
           'u1.uname as updated_by',
           'prd.updated_at'
           );
+
+          $query = $query->whereNull('prd.deleted_at');
           return Datatables::of($query)->toJson();
      }
 

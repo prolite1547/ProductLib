@@ -78,14 +78,14 @@ class ProductController extends Controller
       'image_choice' => 'required|image|mimes:jpeg,png'
     ];
     $request->validate($validation);
-    if(Product::where('barcode', '=', $request->barcode)->count() > 0){
+    if(Product::whereNull('deleted_at')->where('barcode', '=', $request->barcode)->count() > 0){
           return response()->json(array('success'=> false, 'response'=> 'Product already exist, you can check the product list.'), 200);
     }
 
     if($request->hasFile('image_choice')){
       $image = $request->image_choice;
       $original_name = $image->getClientOriginalName();
-      if(ProductImage::where('original_name', '=', $original_name)->count() > 0){
+      if(ProductImage::whereNull('deleted_at')->where('original_name', '=', $original_name)->count() > 0){
         return response()->json(array('success'=> false, 'response'=> 'Product image already exist, you can check the product list.'), 200);
       }
     }
@@ -123,7 +123,7 @@ class ProductController extends Controller
     if($request->hasFile('image_choice')){
       $image = $request->image_choice;
       $original_name = $image->getClientOriginalName();
-      if(ProductImage::where('original_name', '=', $original_name)->count() > 0){
+      if(ProductImage::whereNull('deleted_at')->where('original_name', '=', $original_name)->count() > 0){
         return response()->json(array('success'=> false, 'response'=> 'Product image already exist, you can check the product list.'), 200);
       }
     }
@@ -146,6 +146,22 @@ class ProductController extends Controller
         }
       return response()->json(array('success'=> true), 200);
     // return response()->json($request);
+  }
+
+
+  public function deleteProduct(Request $request){
+    $response = array('success'=> false);
+    $response = DB::transaction(function () use ($request) {
+        Product::findOrFail($request->prodId)->delete();
+        $productImage = ProductImage::where('product_id', $request->prodId);
+        if(!$productImage->delete()){
+           throw new \Exception('An error occurred during deletion of product image');
+           return array('success'=> false);
+        }
+        return array('success'=> true);
+     });
+     
+     return response()->json($response, 200);
   }
 
 

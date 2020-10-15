@@ -15,6 +15,9 @@ Route::get('/', function(){
     return redirect()->route('products.view');
 })->name('products');
 
+Route::get('/appredirect/{user}', 'AppRedirectController@authenticate')->name('user.authenticate');
+Route::post('/appredirects/auth', 'AppRedirectController@checkUser')->name('user.checkUser');
+
 Route::get('/products','AdminController@productsView')->name('products.view');
 Route::get('/reports','AdminController@reportView')->name('report.view');
 
@@ -25,7 +28,7 @@ Route::get('/manage-product/add', 'AdminController@addProductView')->name('addpr
 Route::post('/add-product', 'ProductController@addProduct')->name('addproduct.add');
 Route::get('/get/product-details/{barcode}', 'ProductController@getProductDetails')->name('get.productdetails');
 Route::post('/update-product', 'ProductController@updateProduct')->name('updateproduct.update');
-
+Route::post('/delete-product', 'ProductController@deleteProduct')->name('deleteproduct.delete');
 
 Route::get('/api-products', 'DatatablesController@getProducts')->name('get.products');
 

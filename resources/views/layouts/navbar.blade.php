@@ -60,6 +60,10 @@
                     {{-- <a class="nav-item nav-link nav-link__main" href="#">Home</a> --}}
                     <a class="nav-item nav-link nav-link__main {{in_array(Route::currentRouteName(),$productRoute) ? 'nav-link__active' : ''}}" href="{{ route('products.view') }}">Products</a>
                     <a class="nav-item nav-link nav-link__main {{in_array(Route::currentRouteName(),$reportsRoute) ? 'nav-link__active' : ''}}" href="{{ route('report.view') }}">Reports</a>
+                     
+                   @if (Auth::user()->role_id == 1)
+                       <a class="nav-item nav-link nav-link__main {{in_array(Route::currentRouteName(),$registerRoute) ? 'nav-link__active' : ''}}" href="{{ route('register') }}">Registration</a>
+                   @endif
                 @endauth
             </ul>
             
@@ -78,7 +82,7 @@
                 @else
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->fname }} <span class="caret"></span>
+                            {{ Auth::user()->uname }} <span class="caret"></span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">

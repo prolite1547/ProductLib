@@ -7,7 +7,7 @@ export const ProductController = () => {
     elements.btnGetDetails.on('click', ()=>{
        let barcode = elements.ebs_input.val();
       showLoader();
-       $.ajax(`/get/product-details/${barcode}`,{
+       $.ajax(`/ProdLib/public/get/product-details/${barcode}`,{
             type: 'GET'
        }).done( data =>{
             if(data.length > 0){
@@ -65,7 +65,7 @@ export const ProductController = () => {
 
           let formData = new FormData(e.target);
           showLoader();
-          $.ajax('/add-product', {
+          $.ajax('/ProdLib/public/add-product', {
                type: "POST",
                data: formData,
                contentType: false,
@@ -94,7 +94,7 @@ export const ProductController = () => {
           e.preventDefault();
           let formData = new FormData(e.target);
           showLoader();
-          $.ajax('/update-product', {
+          $.ajax('/ProdLib/public/update-product', {
                type: "POST",
                data: formData,
                contentType: false,

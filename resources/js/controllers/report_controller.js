@@ -6,7 +6,7 @@ export const GenerateReportController = () => {
         e.preventDefault();
         showLoader();
         let form = new FormData(e.target);
-        $.ajax('/generate-report', {
+        $.ajax('/ProdLib/public/generate-report', {
             type: "POST",
             data : form,
             contentType: false,
