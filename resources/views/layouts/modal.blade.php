@@ -19,7 +19,7 @@
             <div class="row mb-2">
                 <div class="col-md-12 text-center">
                     <div class="form-group">
-                      <img height="312px" width="312px" src="../images/no-image.png" title="Click image to upload" alt="No image Preview" id="img_modal" class="img-fluid">
+                      <img height="312px" width="312px" src="../images/no-image.png" title="Click image to upload" alt="No image Preview" id="img_modal" data-img_def="{{ asset('images/no-image.svg') }}" class="img-fluid">
                       <input type="file" name="image_choice" id="modal_image_choice" style="visibility: hidden;" accept="image/png, image/jpeg" required>
                     </div>
                 </div>

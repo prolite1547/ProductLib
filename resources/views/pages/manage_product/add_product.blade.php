@@ -9,7 +9,7 @@
                         <div class="form-group row">
                                 <div class="col-sm-10">
                                         <div class="input-group mb-3">
-                                                 <input type="text" name="barcode" class="form-control input__text" placeholder="Search EBS barcode" aria-label="EBS Barcode" aria-describedby="basic-addon2" id="ebs_input" required>
+                                                 <input type="text" name="ebs_input" class="form-control input__text" placeholder="Search EBS barcode" aria-label="EBS Barcode" aria-describedby="basic-addon2" id="ebs_input" required>
                                                 <div class="input-group-append">
                                                         <button class="btn btn-outline-secondary" id="btnGetDetails" type="button">SEARCH</button>   
                                                 </div>       
@@ -103,22 +103,23 @@
                 <div class="col-md-4">
                         <div class="form-group row">
                                 <img src="{{ asset('images/no-image.svg') }}" data-img_def="{{ asset('images/no-image.svg') }}" class="img-fluid" id="productImg" data-toggle="tooltip" data-placement="right" title="Click to upload image">
-                                <input type="file" name="image_choice" id="image_choice" accept="image/png, image/jpeg" required>
+                                <input type="file" name="image_choice" id="image_choice" accept="image/png, image/jpeg">
                                 {{-- <img src="{{ asset('images/no-image.svg') }}" class="rounded mx-auto d-block" alt=""> --}}
                         </div>
         
                         <div class="form-group row">
                                 <label for="features">Features</label>
-                                <textarea name="feature" class="form-control input__text-area" id="features" cols="10" rows="5"></textarea>
+                                <textarea name="feature" class="form-control input__text-area" id="features" cols="10" rows="5" required></textarea>
                         </div>
         
                         <div class="form-group row">
                                 <label for="benefits">Benefits</label>
-                                <textarea name="benefits" class="form-control input__text-area" id="benefits" cols="10" rows="5"></textarea>
-{{--          
+                                <textarea name="benefits" class="form-control input__text-area" id="benefits" cols="10" rows="5" required></textarea>
+{{--                            
                                 {!! Form::hidden('ebs_msi_updated_at', null, ['id'=>'msib_update_date']) !!}
                                 {!! Form::hidden('ebs_ic_updated_at', null, ['id'=>'cat_update_date']) !!}
                                 {!! Form::hidden('ebs_msi_updated_by', null, ['id'=>'ebs_msi_updated_by']) !!} --}}
+                                {!! Form::hidden('barcode', null, ['id'=>'barcode']) !!} 
                                 {!! Form::hidden('last_update_date', null, ['id'=>'last_update_date']) !!} 
                                 {!! Form::hidden('last_update_by', null, ['id'=>'last_update_by']) !!} 
                                 {!! Form::hidden('user_id', Auth::user()->id , []) !!}

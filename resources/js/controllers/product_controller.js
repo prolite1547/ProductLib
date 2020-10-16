@@ -1,8 +1,9 @@
 import {elements, showLoader, hideLoader, displayError} from "../views/base";
-import {checkImage} from "../views/global";
+import {checkImage, clearForm} from "../views/global";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 export const ProductController = () => {
+    var returnedData = null;
 
     elements.btnGetDetails.on('click', ()=>{
        let barcode = elements.ebs_input.val();
@@ -11,18 +12,22 @@ export const ProductController = () => {
             type: 'GET'
        }).done( data =>{
             if(data.length > 0){
+                returnedData = data;
                 $.each(data[0], function(key, value){
                      $(`#${key}`).val(value);
                 });
-                elements.btnAddProduct.prop('disabled', false);
+                 elements.btnAddProduct.prop('disabled', false);
             }else{
                  Swal.fire('Product not found!', 'Please check your barcode', 'error');
+                 clearForm();
                //   alert("Product not found! Please check your barcode");
             }
             hideLoader();
        }).fail((jqXHR,textStatus,errorThrown) =>{
           if(jqXHR.status == 404){
                console.log("ERROR"+jqXHR.status+": PRODUCT NOT FOUND");
+          }else if(jqXHR.status == 500){
+               Swal.fire('Cant connect to server!', 'Please check your network', 'error');
           }else{
                console.log("ERROR"+jqXHR.status+": UNABLE TO PROCESS REQUEST ");
           }
@@ -56,42 +61,52 @@ export const ProductController = () => {
 
     elements.frmaddProduct.on('submit', (e) => {
           e.preventDefault();
-          let image_def = elements.productImage.data('img_def');
+          var defaultValues = checkInputDefaultValues(returnedData) 
           // let benefits =  convertLines(elements.benefits);
           // let features = convertLines(elements.features);
            
           // elements.features.val(features);
           // elements.benefits.val(benefits);
-
-          let formData = new FormData(e.target);
-          showLoader();
-          $.ajax('/ProdLib/public/add-product', {
-               type: "POST",
-               data: formData,
-               contentType: false,
-               cache: false,
-               processData: false
-          }).done(data =>{
-               if(data.success){
-                    Swal.fire('Done','Product Successfully Added', 'success');
-                    // alert("Product Successfully Added");
-                    elements.productImage.attr('src', image_def);
-                    $(e.target).trigger('reset');
+          if(defaultValues.length > 0){
+               var defaults = "<br>";
+               for(var x = 0 ; x<defaultValues.length; x++){
+                   defaults = defaults.concat("<br><b>"+defaultValues[x]+"</b>");
+               }
+               Swal.fire('Invalid data','Please update fields with "DEFAULT" values' + defaults, 'error');
+               return;
+          } 
+          if(ifImageHasValue()){
+               let formData = new FormData(e.target);
+               showLoader();
+               $.ajax('/ProdLib/public/add-product', {
+                    type: "POST",
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false
+               }).done(data =>{
+                    if(data.success){
+                         Swal.fire('Done','Product Successfully Added', 'success');
+                         // alert("Product Successfully Added");
+                         clearForm();
+                         hideLoader();
+                    }else{
+                         Swal.fire('Something went wrong!',data.response, 'error');
+                         hideLoader();
+                    }   
+               }).fail(jqXHR=>{
                     hideLoader();
-               }else{
-                    Swal.fire('Something went wrong!',data.response, 'error');
-                   
-                    hideLoader();
-               }   
-          }).fail(jqXHR=>{
-               hideLoader();
-          });
-          
+               });
+          }
     });
 
     elements.modalSaveChanges.on('click', ()=>{ elements.frmupdateProduct.trigger('submit'); })
     elements.frmupdateProduct.on('submit', (e)=>{
           e.preventDefault();
+          if(elements.benefits_modal.val().trim().length <= 0 ||  elements.features_modal.val().trim().length <= 0 ){
+               Swal.fire('Invalid data!',"Benefits/Features field is required", 'error');
+               return;
+          }
           let formData = new FormData(e.target);
           showLoader();
           $.ajax('/ProdLib/public/update-product', {
@@ -122,9 +137,25 @@ export const ProductController = () => {
     });
 
 
-   
+   function ifImageHasValue(){
+        var fileImage = elements.btnchooseImage.val();
+        if(!fileImage){
+            Swal.fire('Something went wrong!','Please upload an image', 'error');
+            return false;
+        }
+        return true;
+   }
 
-   
+   function checkInputDefaultValues(inputData){
+        var arrayDefaults = [];
+         $.each(inputData[0], function(key, value){
+          if(value == 'DEFAULT'){
+               var labelText  = $('label[for="' + key + '"]').text();
+               arrayDefaults.push(labelText);
+          }
+     });
+     return arrayDefaults;
+   }  
 }
 
  

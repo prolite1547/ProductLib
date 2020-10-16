@@ -21,10 +21,10 @@ class ProductController extends Controller
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_NUM,
             ];
         /*Oracle*/
-        $myServer = '192.168.3.115';
-        $myDB = 'DW';
-        $oci_uname = 'dw';
-        $oci_pass = 'dw';
+        $myServer = '192.168.3.101';
+        $myDB = 'DEV';
+        $oci_uname = 'appsro';
+        $oci_pass = 'appsro';
         $tns = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = ".$myServer.")(PORT = 1521)))(CONNECT_DATA=(SID=".$myDB.")))";
         try {
             $this->conn = new PDO("oci:dbname=".$tns. ';charset=UTF8', $oci_uname, $oci_pass,$options);
@@ -38,8 +38,9 @@ class ProductController extends Controller
   public function getProductDetails($barcode){
     // Alert::success('Success Message', 'Optional Title');
       $query = "SELECT
-                MSI.BARCODE,
-                MSI.LEGACY_BARCODE,
+                MSI.BARCODE as barcode,
+                MSI.LEGACYBARCODE as LEGACY_BARCODE,
+                -- MSI.LEGACY_BARCODE,
                 MSI.DESCRIPTION,
                 MSI.BRANDNAME as brand,
                 AP.VENDOR_NAME as supplier,
@@ -47,22 +48,26 @@ class ProductController extends Controller
                 MSI.DEPARTMENTNAME as department,
                 MSI.CATEGORYNAME as categ,
                 MSI.SUBCATEGORYNAME as sub_categ,
+                -- MSI.STATUS,
                 MSI.INVENTORY_ITEM_STATUS_CODE as status,
                 MSI.MATERIALNAME as material,
                 MSI.DIMENSIONNAME as dimension,
                 MSI.FINISHCOLORNAME as finish_color,
                 MSI.MODELFRMSUPPLIERNAME as code,
-                TO_CHAR(LASTUPDATEDATE, 'dd-MON-YY hh24:mi:ss') as last_update_date,
-                LASTUPDATEBY as last_update_by
+                TO_CHAR(MSI.LAST_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as last_update_date,
+                MSI.LAST_UPDATED_BY as last_update_by
               --  TO_CHAR(MSIB_LAST_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as msib_update_date,
               --  TO_CHAR(MSI.CAT_UPDATE_DATE, 'dd-MON-YY hh24:mi:ss') as cat_update_date,
               --  MSIB_LAST_UPDATE_BY as ebs_msi_updated_by
                 FROM 
-                -- XXCH_PRODUCT_LISTING_V MSI,
-                XXCH_PRODUCT_LISTING_DEV_V  MSI,
-                DWT_DIM_EX_SUPPLIER  AP 
+                XXCH_MTLCAT_PRODUCT_V MSI,
+                APPS.AP_SUPPLIERS AP
+                --  DWT_DIM_PRODUCT MSI,
+                --  XXCH_PRODUCT_LISTING_V MSI,
+                -- XXCH_PRODUCT_LISTING_DEV_V  MSI,
+                --DWT_DIM_EX_SUPPLIER  AP 
                 WHERE 
-                AP.VENDORID = MSI.SUPPLIERID AND 
+                AP.SEGMENT1 = MSI.VENDORCODE AND 
                 MSI.BARCODE = '$barcode' AND ROWNUM = 1";
       $stmt = $this->conn->prepare($query);
       if($stmt->execute()){
@@ -75,7 +80,9 @@ class ProductController extends Controller
   
     $validation = [
       'barcode' => 'required|string',
-      'image_choice' => 'required|image|mimes:jpeg,png'
+      'image_choice' => 'required|image|mimes:jpeg,png',
+      'features' => 'required|string',
+      'benefits' => 'required|string',
     ];
     $request->validate($validation);
     if(Product::whereNull('deleted_at')->where('barcode', '=', $request->barcode)->count() > 0){
@@ -89,7 +96,8 @@ class ProductController extends Controller
         return response()->json(array('success'=> false, 'response'=> 'Product image already exist, you can check the product list.'), 200);
       }
     }
-    // DB::transaction(function () use ($request){
+   $response = array('success'=> false, 'response'=>'An error occured while inserting data..');
+   $response =  DB::transaction(function () use ($request){
       // $request->merge(['feature'=> nl2br($request->feature), 'benefits'=> nl2br($request->benefits)]);
       $product = Product::create($request->except('_token'));
       if($product->id){
@@ -102,11 +110,11 @@ class ProductController extends Controller
             $path =  $image->store("$productImgDirectoryName", 'productimages');
             ProductImage::create(['product_id' => $product->id, 'path' => $path, 'original_name' => $original_name, 'mime_type' => $mime_type, 'extension' => $original_ext]);
         }
-        return response()->json(array('success'=> true), 200);
+        return array('success'=> true, 'response'=>'Product successfully created');
       }
-    // });
+    });
     
-    return response()->json(array('success'=> false, 'response'=>'An error occured while inserting data..'), 200);
+    return response()->json($response, 200);
   }
 
 
