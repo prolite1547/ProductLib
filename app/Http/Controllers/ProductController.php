@@ -21,10 +21,10 @@ class ProductController extends Controller
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_NUM,
             ];
         /*Oracle*/
-        $myServer = '192.168.3.101';
-        $myDB = 'DEV';
-        $oci_uname = 'appsro';
-        $oci_pass = 'appsro';
+        $myServer = '';
+        $myDB = '';
+        $oci_uname = '';
+        $oci_pass = '';
         $tns = "(DESCRIPTION=(ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = ".$myServer.")(PORT = 1521)))(CONNECT_DATA=(SID=".$myDB.")))";
         try {
             $this->conn = new PDO("oci:dbname=".$tns. ';charset=UTF8', $oci_uname, $oci_pass,$options);
